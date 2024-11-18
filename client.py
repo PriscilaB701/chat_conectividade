@@ -44,24 +44,18 @@ def connect():
 
 
 def send_message():
-    message = message_textbox.get()
-    if message != '':
-        if message == '/quit':
-            try:
-                client.sendall(message.encode())  
+    message = message_textbox.get().strip()  #strip p/ remover espaços extras
+    if message:
+        try:
+            client.sendall(message.encode())
+            if message == '/quit':
                 client.close()  
-                root.destroy()  #fecha a interface
-            except Exception as e:
-                messagebox.showerror("Erro", "Erro ao sair do chat.")
-                print(f"Erro ao sair do chat: {e}")
-        else:
-            try:
-                client.sendall(message.encode())
-                if message_textbox.winfo_exists():
-                    message_textbox.delete(0, len(message))
-            except Exception as e:
-                messagebox.showerror("Erro", "Não foi possível enviar a mensagem.")
-                print(f"Erro ao enviar mensagem: {e}")
+                root.destroy()  
+            else:
+                message_textbox.delete(0, tk.END)  #limpa a caixa de entrada
+        except Exception as e:
+            messagebox.showerror("Erro", "Não foi possível enviar a mensagem.")
+            print(f"Erro ao enviar mensagem: {e}")
     else:
         messagebox.showerror("Mensagem vazia", "Mensagem não pode estar vazia")
 
